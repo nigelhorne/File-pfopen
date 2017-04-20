@@ -14,6 +14,7 @@ WriteMakefile(
     PL_FILES	=> {},
     BUILD_REQUIRES => {
 	'Test::Most' => 0,
+	'Test::TempDir::Tiny' => 0,
 	'Test::NoWarnings' => 0,
     },
     PREREQ_PM => {
