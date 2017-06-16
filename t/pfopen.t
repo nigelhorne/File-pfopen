@@ -2,7 +2,7 @@
 
 use strict;
 
-use Test::Most tests => 13;
+use Test::Most tests => 15;
 use Test::TempDir::Tiny;
 use File::Spec;
 
@@ -20,11 +20,15 @@ ok(!defined(pfopen('/', 'pfopen', 'txt')));
 ok(defined(pfopen("/:$tmpdir", 'pfopen', 'bar:txt')));
 my $fh;
 ($fh, $filename) = pfopen("/:$tmpdir", 'pfopen', 'bar:txt');
+ok(<$fh> eq "Hello, world\n");
 ok($filename =~ /pfopen\.txt$/);
+$fh = pfopen("/:$tmpdir", 'pfopen', 'bar:txt');
 ok(<$fh> eq "Hello, world\n");
 ok(!defined(pfopen('/', 'pfopen', 'txt')));
 ok(!defined(pfopen("/:$tmpdir", 'pfopen')));
 ok(defined(pfopen($tmpdir, 'pfopen.txt')));
 ($fh, $filename) = pfopen("/:$tmpdir", 'pfopen.txt');
+ok(<$fh> eq "Hello, world\n");
 ok($filename =~ /pfopen\.txt$/);
+$fh = pfopen("/:$tmpdir", 'pfopen.txt');
 ok(<$fh> eq "Hello, world\n");

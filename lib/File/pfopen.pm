@@ -32,6 +32,8 @@ our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
+=head2 pfopen
+
     use File::pfopen 'pfopen';
     ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin'));
     $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo'));
