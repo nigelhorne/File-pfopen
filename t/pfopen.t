@@ -1,8 +1,9 @@
 #!perl
 
 use strict;
+use warnings;
 
-use Test::Most tests => 15;
+use Test::Most tests => 17;
 use Test::TempDir::Tiny;
 use File::Spec;
 
@@ -15,10 +16,13 @@ print $fout "Hello, world\n";
 close $fout;
 ok(defined(pfopen($tmpdir, 'pfopen', 'txt')));
 ok(!defined(pfopen($tmpdir, 'pfopen', 'bar')));
+my $fh;
 ok(defined(pfopen($tmpdir, 'pfopen', 'bar:txt')));
+($fh, $filename) = pfopen($tmpdir, 'pfopen', 'bar:txt');
+ok(<$fh> eq "Hello, world\n");
+ok($filename =~ /pfopen\.txt$/);
 ok(!defined(pfopen('/', 'pfopen', 'txt')));
 ok(defined(pfopen("/:$tmpdir", 'pfopen', 'bar:txt')));
-my $fh;
 ($fh, $filename) = pfopen("/:$tmpdir", 'pfopen', 'bar:txt');
 ok(<$fh> eq "Hello, world\n");
 ok($filename =~ /pfopen\.txt$/);
