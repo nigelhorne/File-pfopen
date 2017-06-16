@@ -30,9 +30,11 @@ Version 0.02
 
 our $VERSION = '0.02';
 
-=head1 SYNOPSIS
+=head1 SUBROUTINES/METHODS
 
 =head2 pfopen
+
+Look in a list of directories for a file with an optional list of suffixes.
 
     use File::pfopen 'pfopen';
     ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin'));
