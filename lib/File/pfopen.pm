@@ -33,8 +33,8 @@ our $VERSION = '0.01';
 =head1 SYNOPSIS
 
     use File::pfopen 'pfopen';
-    my $f = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin' );
-    $f = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo');
+    open(my $fin, '<', pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin'));
+    open(my $fin2, '>', pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo'));
 
 =cut 
 
@@ -82,6 +82,8 @@ sub pfopen {
 Nigel Horne, C<< <njh at bandsman.co.uk> >>
 
 =head1 BUGS
+
+Confusing name.  It doesn't actually open the file, what it does is return the name of a openable file.
 
 Please report any bugs or feature requests to C<bug-file-pfopen at rt.cpan.org>,
 or through the web interface at
