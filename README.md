@@ -4,13 +4,13 @@ Try hard to find a file
 
 # VERSION
 
-Version 0.01
+Version 0.02
 
 # SYNOPSIS
 
     use File::pfopen 'pfopen';
-    my $f = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin' );
-    $f = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo');
+    ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin'));
+    $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo'));
 
 # AUTHOR
 

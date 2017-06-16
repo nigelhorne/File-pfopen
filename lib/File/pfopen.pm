@@ -24,17 +24,17 @@ File::pfopen - Try hard to find a file
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
     use File::pfopen 'pfopen';
-    open(my $fin, '<', pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin'));
-    open(my $fin2, '>', pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo'));
+    ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin'));
+    $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo'));
 
 =cut 
 
@@ -53,7 +53,12 @@ sub pfopen {
 	}
 	if($savedpaths->{$candidate}) {
 		# $self->_log({ message => "remembered $savedpaths->{$candidate}" });
-		return $savedpaths->{$candidate};
+		my $rc = $savedpaths->{$candidate};
+		open(my $fh, '+<', $rc);
+		if(wantarray) {
+			return ($fh, $rc);
+		}
+		return $fh;
 	}
 
 	foreach my $dir(split(/:/, $path)) {
@@ -64,17 +69,25 @@ sub pfopen {
 				my $rc = File::Spec->catfile($dir, "$prefix.$suffix");
 				if(-r $rc) {
 					$savedpaths->{$candidate} = $rc;
-					return $rc;
+					open(my $fh, '+<', $rc);
+					if(wantarray) {
+						return ($fh, $rc);
+					}
+					return $fh;
 				}
 			}
 		} elsif(-r "$dir/$prefix") {
 			my $rc = File::Spec->catfile($dir, $prefix);
 			$savedpaths->{$candidate} = $rc;
 			# $self->_log({ message => "using $rc" });
-			return $rc;
+			open(my $fh, '+<', $rc);
+			if(wantarray) {
+				return ($fh, $rc);
+			}
+			return $fh;
 		}
 	}
-	return;
+	return();
 }
 
 =head1 AUTHOR
@@ -82,8 +95,6 @@ sub pfopen {
 Nigel Horne, C<< <njh at bandsman.co.uk> >>
 
 =head1 BUGS
-
-Confusing name.  It doesn't actually open the file, what it does is return the name of a openable file.
 
 Please report any bugs or feature requests to C<bug-file-pfopen at rt.cpan.org>,
 or through the web interface at
