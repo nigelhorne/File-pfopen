@@ -37,8 +37,8 @@ our $VERSION = '0.02';
 Look in a list of directories for a file with an optional list of suffixes.
 
     use File::pfopen 'pfopen';
-    ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin'));
-    $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo'));
+    ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin');
+    $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo');
 
 =cut 
 
