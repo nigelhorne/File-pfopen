@@ -106,8 +106,6 @@ L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=File-pfopen>.
 I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-=head1 SEE ALSO
-
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.

@@ -18,8 +18,8 @@ Version 0.02
 Look in a list of directories for a file with an optional list of suffixes.
 
     use File::pfopen 'pfopen';
-    ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin'));
-    $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo'));
+    ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin');
+    $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo');
 
 # AUTHOR
 
@@ -32,8 +32,6 @@ or through the web interface at
 [http://rt.cpan.org/NoAuth/ReportBug.html?Queue=File-pfopen](http://rt.cpan.org/NoAuth/ReportBug.html?Queue=File-pfopen).
 I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
-
-# SEE ALSO
 
 # SUPPORT
 
