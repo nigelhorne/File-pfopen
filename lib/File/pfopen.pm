@@ -40,7 +40,7 @@ Look in a list of directories for a file with an optional list of suffixes.
     ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin');
     $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo');
 
-=cut 
+=cut
 
 sub pfopen {
 	my $path = shift;
