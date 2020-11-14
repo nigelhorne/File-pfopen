@@ -116,21 +116,29 @@ You can also look for information at:
 
 =over 4
 
+=item * MetaCPAN
+
+L<https://metacpan.org/release/File-pfopen>
+
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-pfopen>
+L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=File-pfopen>
 
-=item * AnnoCPAN: Annotated CPAN documentation
+=item * CPANTS
 
-L<http://annocpan.org/dist/File-pfopen>
+L<http://cpants.cpanauthors.org/dist/File-pfopen>
+
+=item * CPAN Testers' Matrix
+
+L<http://matrix.cpantesters.org/?dist=File-pfopen>
 
 =item * CPAN Ratings
 
 L<http://cpanratings.perl.org/d/File-pfopen>
 
-=item * Search CPAN
+=item * CPAN Testers Dependencies
 
-L<http://search.cpan.org/dist/File-pfopen/>
+L<http://deps.cpantesters.org/?module=File::pfopen>
 
 =back
 

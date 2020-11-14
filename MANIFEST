@@ -9,7 +9,9 @@ README.md
 t/00-load.t
 t/coverage.t
 t/dist.t
+t/links.t
 t/manifest.t
+t/no404s.t
 t/pfopen.t
 t/pod-cm.t
 t/pod.t
