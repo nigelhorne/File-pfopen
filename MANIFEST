@@ -8,6 +8,7 @@ MANIFEST.SKIP
 README
 README.md
 t/00-load.t
+t/comment-spelling.t
 t/coverage.t
 t/critic.t
 t/dist.t
@@ -18,6 +19,7 @@ t/manifest.t
 t/no404s.t
 t/pfopen.t
 t/pod-cm.t
+t/pod-spelling.t
 t/pod.t
 t/snippets.t
 t/vars.t
