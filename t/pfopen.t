@@ -21,7 +21,7 @@ ok(!defined(pfopen($tmpdir, 'pfopen', 'bar')));
 my $fh;
 ($fh, $filename) = pfopen($tmpdir, 'pfopen', 'bar:txt');
 ok(<$fh> eq "Hello, world\n");
-ok($filename =~ /\/pfopen\.txt$/);
+ok($filename =~ /pfopen\.txt$/);
 $fh = pfopen($tmpdir, 'pfopen', 'txt:baz');
 ok(<$fh> eq "Hello, world\n");
 ok(!defined(pfopen('/', 'pfopen', 'txt')));
