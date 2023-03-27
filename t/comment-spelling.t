@@ -19,4 +19,7 @@ if($ENV{AUTHOR_TESTING} ) {
 __DATA__
 ENV
 GPL
+licence
+njh
 TODO
+uk
