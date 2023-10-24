@@ -34,6 +34,6 @@ jobs:
           cpanm -iqn --skip-satisfied File::Spec ExtUtils::MakeMaker Test::Most
           cpanm -iqn --skip-satisfied --installdeps --notest .
       - name: Run Tests
-        run: prove -lv t
+        run: prove -l t
         env:
           AUTOMATIC_TESTING: 1
