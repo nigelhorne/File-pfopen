@@ -3,9 +3,10 @@
 use strict;
 use warnings;
 
-use Test::Most tests => 19;
-use Test::TempDir::Tiny;
 use File::Spec;
+use Test::Most tests => 22;
+use Test::NoWarnings;
+use Test::TempDir::Tiny;
 
 use_ok('File::pfopen', ('pfopen'));
 
@@ -39,3 +40,7 @@ ok(<$fh> eq "Hello, world\n");
 ok($filename =~ /pfopen\.txt$/);
 $fh = pfopen("/:$tmpdir", 'pfopen.txt');
 ok(<$fh> eq "Hello, world\n");
+
+($fh, $filename) = pfopen("/:/not_there_tulip:$tmpdir", 'pfopen.txt');
+ok(<$fh> eq "Hello, world\n");
+ok($filename =~ /pfopen\.txt$/);

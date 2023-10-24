@@ -1,7 +1,7 @@
 package File::pfopen;
 
 # Author Nigel Horne: njh@bandsman.co.uk
-# Copyright (C) 2017 Nigel Horne
+# Copyright (C) 2017-2023 Nigel Horne
 
 # Usage is subject to licence terms.
 # The licence terms of this software are as follows:
@@ -132,10 +132,6 @@ L<http://cpants.cpanauthors.org/dist/File-pfopen>
 
 L<http://matrix.cpantesters.org/?dist=File-pfopen>
 
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/File-pfopen>
-
 =item * CPAN Testers Dependencies
 
 L<http://deps.cpantesters.org/?module=File::pfopen>
@@ -144,7 +140,7 @@ L<http://deps.cpantesters.org/?module=File::pfopen>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2017 Nigel Horne.
+Copyright 2017-2023 Nigel Horne.
 
 Usage is subject to licence terms.
 
