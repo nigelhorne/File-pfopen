@@ -73,6 +73,7 @@ sub pfopen {
 				my $rc = File::Spec->catfile($dir, "$prefix.$suffix");
 				if(-r $rc) {
 					$savedpaths->{$candidate} = $rc;
+					# FIXME: Doesn't play well in taint mode
 					open(my $fh, '+<', $rc);
 					if(wantarray) {
 						return ($fh, $rc);
@@ -99,6 +100,8 @@ sub pfopen {
 Nigel Horne, C<< <njh at bandsman.co.uk> >>
 
 =head1 BUGS
+
+Doesn't play well in taint mode.
 
 Please report any bugs or feature requests to C<bug-file-pfopen at rt.cpan.org>,
 or through the web interface at
