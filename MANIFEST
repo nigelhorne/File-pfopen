@@ -9,7 +9,6 @@ README
 README.md
 t/00-load.t
 t/comment-spelling.t
-t/coverage.t
 t/critic.t
 t/dist.t
 t/eof.t
@@ -18,9 +17,10 @@ t/links.t
 t/manifest.t
 t/no404s.t
 t/pfopen.t
+t/pid-snippets.t
 t/pod-cm.t
+t/pod-coverage.t
 t/pod-spelling.t
 t/pod-synopsis.t
 t/pod.t
-t/snippets.t
 t/vars.t
