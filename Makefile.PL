@@ -15,6 +15,7 @@ WriteMakefile(
     TEST_REQUIRES => {
 	'Test::Most' => 0,
 	'Test::TempDir::Tiny' => 0,
+	'Test::Needs' => 0,
 	'Test::NoWarnings' => 0,
     },
     PREREQ_PM => {
