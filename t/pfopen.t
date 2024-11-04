@@ -5,7 +5,7 @@ use warnings;
 
 use Cwd;
 use File::Spec;
-use Test::Most tests => 27;
+use Test::Most tests => 28;
 use Test::NoWarnings;
 use Test::TempDir::Tiny;
 
@@ -78,7 +78,8 @@ close $fh;
 # Open file with suffix in list context
 {
 	my ($fh, $rc) = pfopen($test_dir, 'testfile', 'txt');
-	ok((defined $fh) && (defined $rc) && ($rc eq $filename), 'Opened file with suffix in list context');
+	ok((defined $fh) && (defined $rc), 'Opened file with suffix in list context');
+	cmp_ok($rc, 'eq', $filename, 'Filename was as expected');
 	close $fh if $fh;
 }
 
