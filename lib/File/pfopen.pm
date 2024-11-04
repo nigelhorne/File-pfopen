@@ -42,58 +42,38 @@ Look in a list of directories for a file with an optional list of suffixes.
 
 =cut
 
-sub pfopen {
-	my $path = shift;
-	my $prefix = shift;
-	my $suffixes = shift;
-
+sub pfopen
+{
+	my ($path, $prefix, $suffixes) = @_;
+	my $candidate = defined($suffixes) ? "$prefix;$path;$suffixes" : "$prefix;$path";
 	our $savedpaths;
 
-	my $candidate;
-	if(defined($suffixes)) {
-		$candidate = "$prefix;$path;$suffixes";
-	} else {
-		$candidate = "$prefix;$path";
-	}
-	if($savedpaths->{$candidate}) {
+	# Return cached filehandle if available
+	if(my $rc = $savedpaths->{$candidate}) {
 		# $self->_log({ message => "remembered $savedpaths->{$candidate}" });
-		my $rc = $savedpaths->{$candidate};
-		open(my $fh, '+<', $rc);
-		if(wantarray) {
-			return ($fh, $rc);
-		}
-		return $fh;
+		open(my $fh, '+<', $rc) or return;
+		return wantarray ? ($fh, $rc) : $fh;
 	}
 
-	foreach my $dir(split(/:/, $path)) {
-		next unless(-d $dir);
-		if($suffixes) {
-			foreach my $suffix(split(/:/, $suffixes)) {
-				# $self->_log({ message => "check for file $dir/$prefix.$suffix" });
-				my $rc = File::Spec->catfile($dir, "$prefix.$suffix");
-				if(-r $rc) {
-					$savedpaths->{$candidate} = $rc;
-					# FIXME: Doesn't play well in taint mode
-					open(my $fh, '+<', $rc);
-					if(wantarray) {
-						return ($fh, $rc);
-					}
-					return $fh;
-				}
-			}
-		} elsif(-r "$dir/$prefix") {
-			my $rc = File::Spec->catfile($dir, $prefix);
-			$savedpaths->{$candidate} = $rc;
+	foreach my $dir (split /:/, $path) {
+		next unless -d $dir;
+
+		foreach my $suffix (defined($suffixes) ? split(/:/, $suffixes) : undef) {
+			my $rc = File::Spec->catfile($dir, defined $suffix ? "$prefix.$suffix" : $prefix);
+			next unless -r $rc;
+
 			# $self->_log({ message => "using $rc" });
-			open(my $fh, '+<', $rc);
-			if(wantarray) {
-				return ($fh, $rc);
-			}
-			return $fh;
+
+			$savedpaths->{$candidate} = $rc;
+			# FIXME: Doesn't play well in taint mode
+			open(my $fh, '+<', $rc) or next;
+			return wantarray ? ($fh, $rc) : $fh;
 		}
 	}
-	return();
+
+	return;
 }
+
 
 =head1 AUTHOR
 

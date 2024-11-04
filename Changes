@@ -1,5 +1,10 @@
 Revision history for File-pfopen
 
+0.03
+	Refactor
+	Use Test::DescribeMe to simplify tests
+	Use gtar to create a distribution on Macs
+
 0.02	Fri Jun 16 15:20:57 EDT 2017
 	Make it a proper pfopen, not just find the file
 
