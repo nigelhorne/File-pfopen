@@ -1,7 +1,7 @@
 package File::pfopen;
 
 # Author Nigel Horne: njh@bandsman.co.uk
-# Copyright (C) 2017-2023 Nigel Horne
+# Copyright (C) 2017-2024 Nigel Horne
 
 # Usage is subject to licence terms.
 # The licence terms of this software are as follows:
@@ -125,7 +125,7 @@ L<http://deps.cpantesters.org/?module=File::pfopen>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2017-2023 Nigel Horne.
+Copyright 2017-2024 Nigel Horne.
 
 Usage is subject to licence terms.
 
