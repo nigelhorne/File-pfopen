@@ -78,7 +78,11 @@ close $fh;
 {
 	my ($fh, $rc) = pfopen($tmpdir, 'testfile', 'txt');
 	ok((defined $fh) && (defined $rc), 'Opened file with suffix in list context');
-	cmp_ok($rc, 'eq', $filename, 'Filename was as expected');
+	if($^O eq 'MSWin32') {
+		ok($filename =~ /$rc/, 'Filename is as expected minus the drive letter');
+	} else {
+		cmp_ok($rc, 'eq', $filename, 'Filename was as expected');
+	}
 	close $fh if $fh;
 }
 
