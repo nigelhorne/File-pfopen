@@ -3,7 +3,6 @@
 # https://github.com/marketplace/actions/setup-perl-environment
 
 name: Test Code
-
 on:
   push:
     branches:
@@ -40,4 +39,16 @@ jobs:
           cpanm -iqn --skip-satisfied Test::Pod::Spelling::CommonMistakes Test::Portability::Files Test::Pod::Coverage
           cpanm -iq --installdeps --notest .
       - name: Run Tests
+        env:
+          AUTHOR_TESTING: 1
+          AUTOMATED_TESTING: 1
+          NO_NETWORK_TESTING: 1
+          NONINTERACTIVE_TESTING: 1
+          # CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: prove -l -b t
+        # run: |
+        #   cover -test
+        #   cover -report codecov
+        #   curl -Os https://uploader.codecov.io/latest/macos/codecov
+        #   chmod +x codecov
+        #   ./codecov -t ${{ secrets.CODECOV_TOKEN }}
