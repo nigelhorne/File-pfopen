@@ -13,12 +13,12 @@ t/critic.t
 t/dist.t
 t/eof.t
 t/eol.t
-t/links.t
 t/manifest.t
 t/no404s.t
 t/pfopen.t
 t/pod-cm.t
 t/pod-coverage.t
+t/pod-links.t
 t/pod-snippets.t
 t/pod-spelling.t
 t/pod-synopsis.t

@@ -47,8 +47,7 @@ ok(<$fh> eq "Hello, world\n");
 ok($filename =~ /pfopen\.txt$/);
 
 # Mock data
-my $test_dir = getcwd();
-$filename = File::Spec->catfile($test_dir, 'testfile.txt');
+$filename = File::Spec->catfile($tmpdir, 'testfile.txt');
 
 # Set up a test file to read
 open($fh, '>', $filename) or die "Could not create test file: $!";
@@ -57,27 +56,27 @@ close $fh;
 
 # Open file without suffix in scalar context
 {
-	my $fh = pfopen($test_dir, 'testfile', undef);
+	my $fh = pfopen($tmpdir, 'testfile', undef);
 	ok(!defined $fh, "Don't open file without suffix in scalar context");
 }
 
 # Open file with suffix in scalar context
 {
-	my $fh = pfopen($test_dir, 'testfile', 'txt');
+	my $fh = pfopen($tmpdir, 'testfile', 'txt');
 	ok(defined $fh, 'Opened file with suffix in scalar context');
 	close $fh if $fh;
 }
 
 # Open file without suffix in list context
 {
-	my ($fh, $rc) = pfopen($test_dir, 'testfile', undef);
+	my ($fh, $rc) = pfopen($tmpdir, 'testfile', undef);
 	ok((!defined $fh) && (!defined $rc),  "Don't open file without suffix in list context");
 	close $fh if $fh;
 }
 
 # Open file with suffix in list context
 {
-	my ($fh, $rc) = pfopen($test_dir, 'testfile', 'txt');
+	my ($fh, $rc) = pfopen($tmpdir, 'testfile', 'txt');
 	ok((defined $fh) && (defined $rc), 'Opened file with suffix in list context');
 	cmp_ok($rc, 'eq', $filename, 'Filename was as expected');
 	close $fh if $fh;
@@ -85,7 +84,7 @@ close $fh;
 
 # File not found returns undef
 {
-	my $fh = pfopen($test_dir, 'nonexistentfile', undef);
+	my $fh = pfopen($tmpdir, 'nonexistentfile', undef);
 	ok(!defined $fh, 'Returns undef when file is not found');
 }
 
