@@ -40,6 +40,9 @@ Look in a list of directories for a file with an optional list of suffixes.
     ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin');
     $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo');
 
+The file is opened read/write.
+If the open fails, filename will be set but fh will not be defined.
+
 =cut
 
 sub pfopen
@@ -51,7 +54,8 @@ sub pfopen
 	# Return cached filehandle if available
 	if(my $rc = $savedpaths->{$candidate}) {
 		# $self->_log({ message => "remembered $savedpaths->{$candidate}" });
-		open(my $fh, '+<', $rc) or return;
+		# Ignore result of open()
+		open(my $fh, '+<', $rc);
 		return wantarray ? ($fh, $rc) : $fh;
 	}
 
@@ -66,7 +70,8 @@ sub pfopen
 
 			$savedpaths->{$candidate} = $rc;
 			# FIXME: Doesn't play well in taint mode
-			open(my $fh, '+<', $rc) or next;
+			# Ignore result of open()
+			open(my $fh, '+<', $rc);
 			return wantarray ? ($fh, $rc) : $fh;
 		}
 	}
@@ -82,6 +87,8 @@ Nigel Horne, C<< <njh at bandsman.co.uk> >>
 =head1 BUGS
 
 Doesn't play well in taint mode.
+
+TODO: allow an open mode (e.g. O_RDONLY) to be given.
 
 Please report any bugs or feature requests to C<bug-file-pfopen at rt.cpan.org>,
 or through the web interface at
