@@ -14,11 +14,7 @@ all_pod_files_spelling_ok();
 
 __END__
 AnnoCPAN
-CGI
 CPAN
 CPANTS
 GPL
 MetaCPAN
-pfopen
-POSTing
-RT

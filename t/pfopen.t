@@ -5,7 +5,7 @@ use warnings;
 
 use Cwd;
 use File::Spec;
-use Test::Most tests => 28;
+use Test::Most tests => 32;
 use Test::NoWarnings;
 use Test::TempDir::Tiny;
 
@@ -67,6 +67,22 @@ close $fh;
 	close $fh if $fh;
 }
 
+# Open file with suffix in scalar context, using first suffix
+{
+	my ($fh, $file) = pfopen($tmpdir, 'testfile', 'txt:foo');
+	ok(defined $fh, 'Opened file with suffix in scalar context, first suffix');
+	close $fh if $fh;
+	cmp_ok($file, 'eq', $filename, 'suffixes are scanned');
+}
+
+# Open file with suffix in scalar context, using second suffix
+{
+	my ($fh, $file) = pfopen($tmpdir, 'testfile', 'foo:txt');
+	ok(defined $fh, 'Opened file with suffix in scalar context, second suffix');
+	close $fh if $fh;
+	cmp_ok($file, 'eq', $filename, 'suffixes are scanned');
+}
+
 # Open file without suffix in list context
 {
 	my ($fh, $rc) = pfopen($tmpdir, 'testfile', undef);
@@ -80,7 +96,6 @@ close $fh;
 	ok((defined $fh) && (defined $rc), 'Opened file with suffix in list context');
 	# my $t1 = 'D:\a\File-pfopen\File-pfopen\tmp\t_pfopen_t\default_1\testfile.txt';
 	# my $t2 = '\a\File-pfopen\File-pfopen\tmp\t_pfopen_t\default_1\testfile.txt';
-	# like ($t1, qr/\Q$t2\E/, 'TTTTTTTT');
 	if($^O eq 'MSWin32') {
 		like($filename, qr/\Q$rc\E/, 'Filename is as expected minus the drive letter');
 	} else {
@@ -89,11 +104,11 @@ close $fh;
 	close $fh if $fh;
 }
 
+# Clean up
+unlink $filename;
+
 # File not found returns undef
 {
 	my $fh = pfopen($tmpdir, 'nonexistentfile', undef);
 	ok(!defined $fh, 'Returns undef when file is not found');
 }
-
-# Clean up
-unlink $filename;
