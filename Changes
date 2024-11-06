@@ -1,6 +1,6 @@
 Revision history for File-pfopen
 
-0.03
+0.03	Wed Nov  6 08:17:35 EST 2024
 	Refactor
 	Use Test::DescribeMe to simplify tests
 	Use gtar to create a distribution on Macs
