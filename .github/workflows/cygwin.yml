@@ -20,10 +20,9 @@ jobs:
 
     steps:
       - name: Set up Cygwin
-        uses: egor-tensin/setup-cygwin@v4
+        uses: egor-tensin/setup-cygwin@master
         with:
-          platform: x64
-          packages: perl_base perl-ExtUtils-MakeMaker make gcc-g++ libcrypt-devel libnsl-devel bash
+          packages: perl perl-ExtUtils-MakeMaker make gcc-g++ libcrypt-devel libnsl-devel bash
       - uses: actions/checkout@main
         with:
           submodules: recursive
