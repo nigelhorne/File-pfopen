@@ -5,7 +5,7 @@ use warnings;
 
 use Cwd;
 use File::Spec;
-use Test::Most tests => 32;
+use Test::Most tests => 33;
 use Test::NoWarnings;
 use Test::TempDir::Tiny;
 
@@ -62,7 +62,7 @@ close $fh;
 
 # Open file with suffix in scalar context
 {
-	my $fh = pfopen($tmpdir, 'testfile', 'txt');
+	my $fh = pfopen($tmpdir, 'testfile', 'txt', '<');
 	ok(defined $fh, 'Opened file with suffix in scalar context');
 	close $fh if $fh;
 }
@@ -111,4 +111,10 @@ unlink $filename;
 {
 	my $fh = pfopen($tmpdir, 'nonexistentfile', undef);
 	ok(!defined $fh, 'Returns undef when file is not found');
+}
+
+# File not openable returns undef
+{
+	my $fh = pfopen($tmpdir, '.', undef, '>');
+	ok(!defined $fh, 'Returns undef when attempting to open directory for writing')
 }
