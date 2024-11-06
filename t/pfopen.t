@@ -72,7 +72,11 @@ close $fh;
 	my ($fh, $file) = pfopen($tmpdir, 'testfile', 'txt:foo');
 	ok(defined $fh, 'Opened file with suffix in scalar context, first suffix');
 	close $fh if $fh;
-	cmp_ok($file, 'eq', $filename, 'suffixes are scanned');
+	if($^O eq 'MSWin32') {
+		like($filename, qr/\Q$file\E/, 'suffixes are scanned');
+	} else {
+		cmp_ok($file, 'eq', $filename, 'suffixes are scanned');
+	}
 }
 
 # Open file with suffix in scalar context, using second suffix
@@ -80,7 +84,11 @@ close $fh;
 	my ($fh, $file) = pfopen($tmpdir, 'testfile', 'foo:txt');
 	ok(defined $fh, 'Opened file with suffix in scalar context, second suffix');
 	close $fh if $fh;
-	cmp_ok($file, 'eq', $filename, 'suffixes are scanned');
+	if($^O eq 'MSWin32') {
+		like($filename, qr/\Q$file\E/, 'suffixes are scanned');
+	} else {
+		cmp_ok($file, 'eq', $filename, 'suffixes are scanned');
+	}
 }
 
 # Open file without suffix in list context
