@@ -52,7 +52,7 @@ sub pfopen
 
 	$mode ||= '+<';	# defaults to opening RW
 
-	# Return cached filehandle if available
+	# Return cached filename if available
 	if(my $rc = $savedpaths->{$candidate}) {
 		# $self->_log({ message => "remembered $savedpaths->{$candidate}" });
 		if(open(my $fh, $mode, $rc)) {
