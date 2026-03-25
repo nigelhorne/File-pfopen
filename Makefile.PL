@@ -13,7 +13,7 @@ if($^O eq 'darwin') {
 
 WriteMakefile(
     NAME		=> 'File::pfopen',
-    AUTHOR		=> q{Nigel Horne <njh@bandsman.co.uk>},
+    AUTHOR		=> q{Nigel Horne <njh@nigelhorne.com>},
     VERSION_FROM	=> 'lib/File/pfopen.pm',
     ABSTRACT_FROM       => 'lib/File/pfopen.pm',
     ((defined($ExtUtils::MakeMaker::VERSION) &&
@@ -27,6 +27,7 @@ WriteMakefile(
 	'Test::TempDir::Tiny' => 0,
 	'Test::Needs' => 0,
 	'Test::NoWarnings' => 0,
+	'Test::Warnings' => 0,
     },
     PREREQ_PM => {
 	'File::Spec' => 0,
