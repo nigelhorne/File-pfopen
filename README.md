@@ -26,7 +26,7 @@ If mode (argument 4) isn't given, the file is open read/write ('+<')
 
 # AUTHOR
 
-Nigel Horne, `<njh at bandsman.co.uk>`
+Nigel Horne, `<njh at nigelhorne.com>`
 
 # BUGS
 
