@@ -20,7 +20,7 @@ jobs:
       matrix:
         os:
           - windows-latest
-          - windows-2019
+          - windows-2022
         perl: ['5.40', '5.38', '5.32', '5.30', '5.24']
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
     steps:
