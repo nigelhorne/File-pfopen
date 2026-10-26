@@ -12,6 +12,7 @@ package File::pfopen;
 
 use strict;
 use warnings;
+use Carp;
 use Config;
 use File::Spec;
 
@@ -51,7 +52,21 @@ for example C<'C:\tmp;D:\data'>.
 
 The list of suffixes is separated by colons on all platforms.
 
-If mode (argument 4) isn't given, the file is open read/write ('+<')
+If mode (argument 4) isn't given, the file is open read/write ('+<').
+Only file modes are accepted ('<', '>', '>>', '+<', '+>' and '+>>',
+optionally followed by I/O layers such as ':raw'),
+so a found file can never be run as a command.
+
+Only files are found, never directories.
+Empty or undefined directories in the list are ignored,
+as are names containing a NUL character, which can't be valid filenames.
+
+Returns the file handle, or in list context the file handle and the filename.
+Returns nothing if the file isn't found.
+
+Croaks if the path or prefix is missing,
+if the path is a reference to something other than an array,
+or if the mode is invalid.
 
 =cut
 
@@ -59,18 +74,36 @@ sub pfopen
 {
 	my ($path, $prefix, $suffixes, $mode) = @_;
 
-	my @dirs = (ref($path) eq 'ARRAY') ? @{$path} : split(/\Q$Config{path_sep}\E/, $path);
+	if((!defined($path)) || (!defined($prefix)) || (length($prefix) == 0)) {
+		croak('Usage: pfopen($path, $prefix, [$suffixes, [$mode]])');
+	}
+	if(ref($path) && (ref($path) ne 'ARRAY')) {
+		croak('pfopen: path must be a string or an array reference');
+	}
+
+	$mode ||= '+<';	# defaults to opening RW
+
+	# Allowing other modes would let '-|' or '|-' run the found file as a command
+	if($mode !~ /\A\+?(?:<|>>?)(?::.*)?\z/s) {
+		croak("pfopen: invalid mode '$mode'");
+	}
+
+	# A NUL can never be in a filename, so don't bother looking.
+	#	It would only give warnings from the file tests
+	return if(index($prefix, "\0") >= 0);
+	return if(defined($suffixes) && (index($suffixes, "\0") >= 0));
+
+	my @dirs = grep { defined($_) && length($_) && (index($_, "\0") < 0) }
+		(ref($path) ? @{$path} : split(/\Q$Config{path_sep}\E/, $path));
 
 	# NUL can't appear in a filename, so different arguments can't give the same key
 	my $candidate = join("\0", $prefix, defined($suffixes) ? $suffixes : '', @dirs);
 	our $savedpaths;
 
-	$mode ||= '+<';	# defaults to opening RW
-
 	# Return cached filename if available
 	if(my $rc = $savedpaths->{$candidate}) {
 		# $self->_log({ message => "remembered $savedpaths->{$candidate}" });
-		if(open(my $fh, $mode, $rc)) {
+		if((!-d $rc) && open(my $fh, $mode, $rc)) {
 			return wantarray ? ($fh, $rc) : $fh;
 		}
 		delete $savedpaths->{$candidate};	# Failed to open cached file
@@ -81,7 +114,10 @@ sub pfopen
 
 		foreach my $suffix (defined($suffixes) ? split(/:/, $suffixes) : undef) {
 			my $rc = File::Spec->catfile($dir, defined $suffix ? "$prefix.$suffix" : $prefix);
-			next unless -r $rc;
+
+			# Opening a directory with '<' succeeds, but it isn't what was asked for
+			next if(-d $rc);
+			next unless -r _;
 
 			# $self->_log({ message => "using $rc" });
 

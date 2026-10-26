@@ -4,26 +4,24 @@
 [![Coverage Status](https://coveralls.io/repos/github/nigelhorne/File-pfopen/badge.svg?branch=master)](https://coveralls.io/github/nigelhorne/File-pfopen?branch=master)
 [![Kritika Analysis Status](https://kritika.io/users/nigelhorne/repos/7983554719636717/heads/master/status.svg)](https://kritika.io/users/nigelhorne/repos/7983554719636717/heads/master/)
 
-## Name
+# NAME
 
 File::pfopen - Try hard to find a file
 
-## Version
+# VERSION
 
 Version 0.04
 
-## Subroutines/Methods
+# SUBROUTINES/METHODS
 
-### Pfopen
+## pfopen
 
 Look in a list of directories for a file with an optional list of suffixes.
 
-```perl
-use File::pfopen 'pfopen';
-($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin');
-$fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', undef, '<');
-$fh = pfopen(['/tmp', '/var/tmp'], 'foo', 'txt');
-```
+    use File::pfopen 'pfopen';
+    ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin');
+    $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', undef, '<');
+    $fh = pfopen(['/tmp', '/var/tmp'], 'foo', 'txt');
 
 The list of directories is either a string separated by the platform's
 path separator (`$Config{path_sep}`, which is ':' on UNIX and ';' on Windows,
@@ -34,9 +32,23 @@ for example `'C:\tmp;D:\data'`.
 
 The list of suffixes is separated by colons on all platforms.
 
-If mode (argument 4) isn't given, the file is open read/write ('+<')
+If mode (argument 4) isn't given, the file is open read/write ('+<').
+Only file modes are accepted ('<', '>', '>>', '+<', '+>' and '+>>',
+optionally followed by I/O layers such as ':raw'),
+so a found file can never be run as a command.
 
-## Bugs
+Only files are found, never directories.
+Empty or undefined directories in the list are ignored,
+as are names containing a NUL character, which can't be valid filenames.
+
+Returns the file handle, or in list context the file handle and the filename.
+Returns nothing if the file isn't found.
+
+Croaks if the path or prefix is missing,
+if the path is a reference to something other than an array,
+or if the mode is invalid.
+
+# BUGS
 
 Doesn't play well in taint mode.
 
@@ -48,13 +60,11 @@ or through the web interface at
 I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-## Support
+# SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-```
-perldoc File::pfopen
-```
+    perldoc File::pfopen
 
 You can also look for information at:
 
@@ -78,11 +88,11 @@ You can also look for information at:
 
     [http://deps.cpantesters.org/?module=File::pfopen](http://deps.cpantesters.org/?module=File::pfopen)
 
-## Author
+# AUTHOR
 
 Nigel Horne, `<njh at nigelhorne.com>`
 
-## Licence and Copyright
+# LICENCE AND COPYRIGHT
 
 Copyright 2017-2026 Nigel Horne.
 
