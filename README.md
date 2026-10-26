@@ -26,7 +26,7 @@ $fh = pfopen(['/tmp', '/var/tmp'], 'foo', 'txt');
 ```
 
 The list of directories is either a string separated by the platform's
-path separator (`$Config{path_sep}`, which is ':' on Unix and ';' on Windows,
+path separator (`$Config{path_sep}`, which is ':' on UNIX and ';' on Windows,
 as used by the PATH environment variable),
 or a reference to an array of directories.
 On Windows, this allows directories with drive letters to be given,
@@ -35,10 +35,6 @@ for example `'C:\tmp;D:\data'`.
 The list of suffixes is separated by colons on all platforms.
 
 If mode (argument 4) isn't given, the file is open read/write ('+<')
-
-## Author
-
-Nigel Horne, `<njh at nigelhorne.com>`
 
 ## Bugs
 
@@ -82,15 +78,14 @@ You can also look for information at:
 
     [http://deps.cpantesters.org/?module=File::pfopen](http://deps.cpantesters.org/?module=File::pfopen)
 
-## License and Copyright
+## Author
+
+Nigel Horne, `<njh at nigelhorne.com>`
+
+## Licence and Copyright
 
 Copyright 2017-2026 Nigel Horne.
 
-Usage is subject to licence terms.
-
-The licence terms of this software are as follows:
-
-\* Personal single user, single computer use: GPL2
-\* All other users (including Commercial, Charity, Educational, Government)
-  must apply in writing for a licence for use from Nigel Horne at the
-  above e-mail.
+Usage is subject to the GPL2 licence terms.
+If you use it,
+please let me know.
