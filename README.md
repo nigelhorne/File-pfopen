@@ -1,8 +1,6 @@
-[![Linux Build Status](https://travis-ci.org/nigelhorne/File-pfopen.svg?branch=master)](https://travis-ci.org/nigelhorne/File-pfopen)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/1t1yhvagx00c2qi8?svg=true)](https://ci.appveyor.com/project/nigelhorne/cgi-info)
-[![Dependency Status](https://dependencyci.com/github/nigelhorne/File-pfopen/badge)](https://dependencyci.com/github/nigelhorne/File-pfopen)
+[![Perl CI](https://github.com/nigelhorne/File-pfopen/actions/workflows/perl-ci.yml/badge.svg)](https://github.com/nigelhorne/File-pfopen/actions/workflows/perl-ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/nigelhorne/File-pfopen/badge.svg?branch=master)](https://coveralls.io/github/nigelhorne/File-pfopen?branch=master)
-[![Kritika Analysis Status](https://kritika.io/users/nigelhorne/repos/7983554719636717/heads/master/status.svg)](https://kritika.io/users/nigelhorne/repos/7983554719636717/heads/master/)
+[![CPAN](https://img.shields.io/cpan/v/File-pfopen.svg)](https://metacpan.org/release/File-pfopen)
 
 ## Name
 
@@ -121,6 +119,8 @@ It remembers each successful search until the program ends.
 When it is called again with the same `$path`, `$prefix` and `$suffixes`,
 it opens the same file again and does not search.
 If that file can no longer be opened, it forgets the file and searches again.
+A string and an array reference that give the same directories count as the same `$path`,
+so `['/a', '/b']` and `'/a:/b'` share one remembered file.
 
 #### Arguments
 
@@ -145,6 +145,8 @@ If that file can no longer be opened, it forgets the file and searches again.
 
     The name of the file to find, without its suffix. For example, `'config'`.
     It must not be empty.
+    The name is used exactly as given.
+    Characters such as `|`, `<` and `>` have no special meaning.
 
 - `$suffixes` (optional)
 
@@ -192,6 +194,9 @@ because a filename can never contain one.
 
 It remembers the filename of each successful search, as described in ["Purpose"](#purpose).
 It also forgets a remembered filename when that file can no longer be opened.
+In taint mode, a call with any tainted argument always searches,
+and doesn't remember what it finds,
+so a remembered filename can't hide or add taint.
 
 It does not change `$!`, `$@`, `$_`, or any of its arguments.
 
@@ -213,6 +218,11 @@ It croaks (dies with an error message that gives your file and line number) with
     when `$mode` is not one of the modes listed in ["Arguments"](#arguments), for example `'-|'`.
 
 It does not croak or warn when a file can't be found or can't be opened.
+
+When Perl runs in taint mode (`-T`) and `$path` or `$prefix` is tainted,
+a mode that writes, including the default `'+<'`,
+dies with Perl's own error `Insecure dependency in open while running with -T switch`.
+Use the mode `'<'`, or untaint the arguments first.
 
 #### Usage Example
 
@@ -332,7 +342,7 @@ If `$prefix` comes from a user, check it before you call `pfopen`.
 
 ## Bugs
 
-Doesn't play well in taint mode.
+In taint mode, writing to a file with a tainted name dies. See ["Errors"](#errors).
 
 Would be better if the mode and suffixes options were the other way around, but it's too late to change that now.
 
@@ -468,6 +478,7 @@ pfopen ≙ PfopenError ∨ PfopenRemembered ∨ PfopenFound ∨ PfopenNotFound
 
 The errors are checked in the order shown, and the first one that applies is raised.
 A `$prefix` or `$suffixes` containing NUL gives `PfopenNotFound` without changing `cache`.
+In taint mode, a call with a tainted argument behaves as if `key` were not in `dom cache`, and `cache' = cache`.
 
 ## State Diagram
 
@@ -517,6 +528,7 @@ Notes:
 - "Bad argument" means one of the croaks in ["Errors"](#errors).
 It is checked before anything else, so it never changes the state.
 - A `$prefix` or `$suffixes` containing a NUL character returns nothing in either state, and doesn't change the state.
+- In taint mode, a call with a tainted argument always searches, as if in the FORGOTTEN state, and never changes the state.
 - "Fails" means the remembered file is gone, is now a directory, or can't be opened in the `$mode` of this call.
 - There is no way to forget all the remembered files, except by ending the program.
 

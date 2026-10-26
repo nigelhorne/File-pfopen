@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Config;
-use Cwd;
 use File::Spec;
 use Test::Most tests => 33;
 use Test::NoWarnings;

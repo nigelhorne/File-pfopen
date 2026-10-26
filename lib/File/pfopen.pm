@@ -1,20 +1,16 @@
 package File::pfopen;
 
-# Author Nigel Horne: njh@bandsman.co.uk
+# Author Nigel Horne: njh@nigelhorne.com
 # Copyright (C) 2017-2026 Nigel Horne
 
-# Usage is subject to licence terms.
-# The licence terms of this software are as follows:
-# Personal single user, single computer use: GPL2
-# All other users (including Commercial, Charity, Educational, Government)
-#	must apply in writing for a licence for use from Nigel Horne at the
-#	above e-mail.
+# Usage is subject to the GPL2 licence terms.
 
 use strict;
 use warnings;
 use Carp;
 use Config;
 use File::Spec;
+use Scalar::Util qw(tainted);
 
 require Exporter;
 our @ISA = ('Exporter');
@@ -125,6 +121,8 @@ It remembers each successful search until the program ends.
 When it is called again with the same C<$path>, C<$prefix> and C<$suffixes>,
 it opens the same file again and does not search.
 If that file can no longer be opened, it forgets the file and searches again.
+A string and an array reference that give the same directories count as the same C<$path>,
+so C<['/a', '/b']> and C<'/a:/b'> share one remembered file.
 
 =head3 Arguments
 
@@ -156,6 +154,8 @@ A relative directory, such as C<'.'>, is relative to the current directory when 
 
 The name of the file to find, without its suffix. For example, C<'config'>.
 It must not be empty.
+The name is used exactly as given.
+Characters such as C<|>, C<E<lt>> and C<E<gt>> have no special meaning.
 
 =item C<$suffixes> (optional)
 
@@ -209,6 +209,9 @@ because a filename can never contain one.
 
 It remembers the filename of each successful search, as described in L</Purpose>.
 It also forgets a remembered filename when that file can no longer be opened.
+In taint mode, a call with any tainted argument always searches,
+and doesn't remember what it finds,
+so a remembered filename can't hide or add taint.
 
 It does not change C<$!>, C<$@>, C<$_>, or any of its arguments.
 
@@ -234,6 +237,11 @@ when C<$mode> is not one of the modes listed in L</Arguments>, for example C<'-|
 =back
 
 It does not croak or warn when a file can't be found or can't be opened.
+
+When Perl runs in taint mode (C<-T>) and C<$path> or C<$prefix> is tainted,
+a mode that writes, including the default C<'+E<lt>'>,
+dies with Perl's own error C<Insecure dependency in open while running with -T switch>.
+Use the mode C<'E<lt>'>, or untaint the arguments first.
 
 =head3 Usage Example
 
@@ -302,9 +310,12 @@ sub pfopen
 	my $candidate = join("\0", $prefix, defined($suffixes) ? $suffixes : '', @dirs);
 	our $savedpaths;
 
+	# A remembered name would hide the taint of these arguments, letting a write
+	#	succeed that taint mode should stop, or the other way around
+	my $remember = !(tainted($candidate) || tainted($mode));
+
 	# Return cached filename if available
-	if(my $rc = $savedpaths->{$candidate}) {
-		# $self->_log({ message => "remembered $savedpaths->{$candidate}" });
+	if($remember && (my $rc = $savedpaths->{$candidate})) {
 		if((!-d $rc) && open(my $fh, $mode, $rc)) {
 			return wantarray ? ($fh, $rc) : $fh;
 		}
@@ -321,12 +332,10 @@ sub pfopen
 			next if(-d $rc);
 			next unless -r _;
 
-			# $self->_log({ message => "using $rc" });
-
-			# FIXME: Doesn't play well in taint mode
+			# In taint mode this dies if $rc is tainted and $mode writes, see "Errors" in the POD
 			open(my $fh, $mode, $rc) or next;
 
-			$savedpaths->{$candidate} = $rc;
+			$savedpaths->{$candidate} = $rc if($remember);
 			return wantarray ? ($fh, $rc) : $fh;
 		}
 	}
@@ -425,7 +434,7 @@ Without a layer, the file handle reads and writes bytes.
 
 =head1 BUGS
 
-Doesn't play well in taint mode.
+In taint mode, writing to a file with a tainted name dies. See L</Errors>.
 
 Would be better if the mode and suffixes options were the other way around, but it's too late to change that now.
 
@@ -563,6 +572,7 @@ You do not need to read it to use the module.
 
 The errors are checked in the order shown, and the first one that applies is raised.
 A C<$prefix> or C<$suffixes> containing NUL gives C<PfopenNotFound> without changing C<cache>.
+In taint mode, a call with a tainted argument behaves as if C<key> were not in C<dom cache>, and C<cache' = cache>.
 
 =head1 STATE DIAGRAM
 
@@ -613,6 +623,8 @@ Notes:
 It is checked before anything else, so it never changes the state.
 
 =item * A C<$prefix> or C<$suffixes> containing a NUL character returns nothing in either state, and doesn't change the state.
+
+=item * In taint mode, a call with a tainted argument always searches, as if in the FORGOTTEN state, and never changes the state.
 
 =item * "Fails" means the remembered file is gone, is now a directory, or can't be opened in the C<$mode> of this call.
 

@@ -12,9 +12,17 @@ Revision history for File-pfopen
 	Ignore undefined and empty directories, and names containing NUL,
 		instead of giving warnings
 	Doesn't change $!
+	Taint mode: a call with tainted arguments never uses or adds to the
+		remembered results, which could let a tainted write succeed,
+		or make an untainted one die
 	Rewrote the documentation: more examples, common pitfalls, encoding,
 		API and formal specifications, and a state diagram
-	Added t/function.t and t/unit.t
+	Added t/function.t, t/unit.t and t/taint.t
+	t/function.t and t/unit.t are skipped if their test modules, which need
+		a newer Perl, aren't installed
+	Licence metadata is now gpl_2, matching the LICENSE file
+	Added SECURITY.md, the provides metadata and the develop prerequisites
+	Updated README and the README.md badges, and the repository URL
 
 0.03	Wed Nov  6 08:17:35 EST 2024
 	Refactor

@@ -8,6 +8,13 @@
 use strict;
 use warnings;
 
+# These need a newer Perl than the module does, so are recommended rather than required
+use Test::Needs {
+	'Readonly' => 0,
+	'Test::Mockingbird' => '0.14',
+	'Test::Returns' => '0.05',
+};
+
 use Config;
 use Errno qw(EACCES);
 use File::Spec;
@@ -79,6 +86,7 @@ my %ledger = (
 	'returns: nothing for NUL' => 'NUL in the prefix or suffixes returns nothing',
 	'side effect: remembered' => 'A repeated call reopens the remembered file without searching',
 	'side effect: forgotten' => "A remembered file that can't be opened is forgotten",
+	'side effect: string and array share' => 'A string and an array of the same directories share one remembered file',
 	'side effect: globals' => q{$!, $@ and $_ are unchanged},
 	'side effect: arguments' => q{The caller's arguments are unchanged},
 );
@@ -375,6 +383,21 @@ subtest 'a repeated call reopens the remembered file' => sub {
 	(undef, $file) = pfopen([$dir1, $dir2], $config{prefix}, $config{other_suffix}, '<');
 	ok(!defined($file), 'different arguments are a different lookup');
 	proved('side effect: remembered');
+};
+
+# Remember with one form of $path, then show the other form reuses it
+subtest 'a string and an array of the same directories share one remembered file' => sub {
+	my $dir1 = make_dir('share_first');
+	my $dir2 = make_dir('share_second');
+	my $file2 = make_file($dir2, $name, $config{second_content});
+
+	my (undef, $file) = pfopen([$dir1, $dir2], $config{prefix}, $config{suffix}, '<');
+	is($file, $file2, 'array form found the second directory');
+
+	make_file($dir1, $name, $config{first_content});
+	(undef, $file) = pfopen("$dir1$config{sep}$dir2", $config{prefix}, $config{suffix}, '<');
+	is($file, $file2, 'string form reused it, so the new file in the first directory is not seen');
+	proved('side effect: string and array share');
 };
 
 subtest 'a remembered file that cannot be opened is forgotten' => sub {

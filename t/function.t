@@ -10,6 +10,14 @@
 use strict;
 use warnings;
 
+# These need a newer Perl than the module does, so are recommended rather than required
+use Test::Needs {
+	'Readonly' => 0,
+	'Test::Memory::Cycle' => 0,
+	'Test::Mockingbird' => '0.14',
+	'Test::Returns' => '0.05',
+};
+
 use Config;
 use Errno qw(EACCES);
 use File::Spec;

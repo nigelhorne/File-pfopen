@@ -8,6 +8,7 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 README
 README.md
+SECURITY.md
 t/00-load.t
 t/comment-spelling.t
 t/critic.t
@@ -26,5 +27,6 @@ t/pod-spelling.t
 t/pod-synopsis.t
 t/pod.t
 t/separators.t
+t/taint.t
 t/unit.t
 t/vars.t
