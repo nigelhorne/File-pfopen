@@ -12,16 +12,17 @@ if($^O eq 'darwin') {
 }
 
 WriteMakefile(
-    NAME		=> 'File::pfopen',
-    AUTHOR		=> q{Nigel Horne <njh@nigelhorne.com>},
-    VERSION_FROM	=> 'lib/File/pfopen.pm',
-    ABSTRACT_FROM       => 'lib/File/pfopen.pm',
+	NAME		=> 'File::pfopen',
+	AUTHOR		=> q{Nigel Horne <njh@nigelhorne.com>},
+	VERSION_FROM	=> 'lib/File/pfopen.pm',
+	ABSTRACT_FROM       => 'lib/File/pfopen.pm',
     ((defined($ExtUtils::MakeMaker::VERSION) &&
      ($ExtUtils::MakeMaker::VERSION >= 6.3002))
       ? ('LICENSE'=> 'GPL')
       : ()),
     PL_FILES	=> {},
     TEST_REQUIRES => {
+	'IPC::System::Simple' => 0,
 	'Readonly' => 0,
 	'Test::DescribeMe' => 0,
 	'Test::Memory::Cycle' => 0,
@@ -54,5 +55,5 @@ WriteMakefile(
 		}
 	},
     },
-    MIN_PERL_VERSION	=> '5.6.2'	# Probably would work, but never tested on earlier versions than this
+	MIN_PERL_VERSION	=> '5.6.2'	# Probably would work, but never tested on earlier versions than this
 );

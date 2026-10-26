@@ -8,14 +8,15 @@ requires 'Exporter';
 requires 'File::Spec';
 
 on 'test' => sub {
+	requires 'IPC::System::Simple';
 	requires 'Readonly';
 	requires 'Test::DescribeMe';
 	requires 'Test::Memory::Cycle';
 	requires 'Test::Mockingbird', '0.14';
 	requires 'Test::Most';
-	requires 'Test::Returns', '0.05';
 	requires 'Test::Needs';
 	requires 'Test::NoWarnings';
+	requires 'Test::Returns', '0.05';
 	requires 'Test::TempDir::Tiny';
 	requires 'Test::Warnings';
 };
