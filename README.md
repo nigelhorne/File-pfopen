@@ -4,35 +4,45 @@
 [![Coverage Status](https://coveralls.io/repos/github/nigelhorne/File-pfopen/badge.svg?branch=master)](https://coveralls.io/github/nigelhorne/File-pfopen?branch=master)
 [![Kritika Analysis Status](https://kritika.io/users/nigelhorne/repos/7983554719636717/heads/master/status.svg)](https://kritika.io/users/nigelhorne/repos/7983554719636717/heads/master/)
 
-# NAME
+## Name
 
 File::pfopen - Try hard to find a file
 
-# VERSION
+## Version
 
-Version 0.03
+Version 0.04
 
-# SUBROUTINES/METHODS
+## Subroutines/Methods
 
-## pfopen
+### Pfopen
 
 Look in a list of directories for a file with an optional list of suffixes.
 
-    use File::pfopen 'pfopen';
-    ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin');
-    $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', '<');
+```perl
+use File::pfopen 'pfopen';
+($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin');
+$fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', undef, '<');
+$fh = pfopen(['/tmp', '/var/tmp'], 'foo', 'txt');
+```
+
+The list of directories is either a string separated by the platform's
+path separator (`$Config{path_sep}`, which is ':' on Unix and ';' on Windows,
+as used by the PATH environment variable),
+or a reference to an array of directories.
+On Windows, this allows directories with drive letters to be given,
+for example `'C:\tmp;D:\data'`.
+
+The list of suffixes is separated by colons on all platforms.
 
 If mode (argument 4) isn't given, the file is open read/write ('+<')
 
-# AUTHOR
+## Author
 
 Nigel Horne, `<njh at nigelhorne.com>`
 
-# BUGS
+## Bugs
 
 Doesn't play well in taint mode.
-
-Using the colon separator can cause confusion on Windows.
 
 Would be better if the mode and suffixes options were the other way around, but it's too late to change that now.
 
@@ -42,11 +52,13 @@ or through the web interface at
 I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-# SUPPORT
+## Support
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc File::pfopen
+```
+perldoc File::pfopen
+```
 
 You can also look for information at:
 
@@ -70,9 +82,9 @@ You can also look for information at:
 
     [http://deps.cpantesters.org/?module=File::pfopen](http://deps.cpantesters.org/?module=File::pfopen)
 
-# LICENSE AND COPYRIGHT
+## License and Copyright
 
-Copyright 2017-2024 Nigel Horne.
+Copyright 2017-2026 Nigel Horne.
 
 Usage is subject to licence terms.
 

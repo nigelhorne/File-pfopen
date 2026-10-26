@@ -1,7 +1,7 @@
 package File::pfopen;
 
 # Author Nigel Horne: njh@bandsman.co.uk
-# Copyright (C) 2017-2024 Nigel Horne
+# Copyright (C) 2017-2026 Nigel Horne
 
 # Usage is subject to licence terms.
 # The licence terms of this software are as follows:
@@ -12,6 +12,7 @@ package File::pfopen;
 
 use strict;
 use warnings;
+use Config;
 use File::Spec;
 
 require Exporter;
@@ -24,11 +25,11 @@ File::pfopen - Try hard to find a file
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 SUBROUTINES/METHODS
 
@@ -38,7 +39,17 @@ Look in a list of directories for a file with an optional list of suffixes.
 
     use File::pfopen 'pfopen';
     ($fh, $filename) = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', 'txt:bin');
-    $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', '<');
+    $fh = pfopen('/tmp:/var/tmp:/home/njh/tmp', 'foo', undef, '<');
+    $fh = pfopen(['/tmp', '/var/tmp'], 'foo', 'txt');
+
+The list of directories is either a string separated by the platform's
+path separator (C<$Config{path_sep}>, which is ':' on Unix and ';' on Windows,
+as used by the PATH environment variable),
+or a reference to an array of directories.
+On Windows, this allows directories with drive letters to be given,
+for example C<'C:\tmp;D:\data'>.
+
+The list of suffixes is separated by colons on all platforms.
 
 If mode (argument 4) isn't given, the file is open read/write ('+<')
 
@@ -47,7 +58,11 @@ If mode (argument 4) isn't given, the file is open read/write ('+<')
 sub pfopen
 {
 	my ($path, $prefix, $suffixes, $mode) = @_;
-	my $candidate = defined($suffixes) ? "$prefix;$path;$suffixes" : "$prefix;$path";
+
+	my @dirs = (ref($path) eq 'ARRAY') ? @{$path} : split(/\Q$Config{path_sep}\E/, $path);
+
+	# NUL can't appear in a filename, so different arguments can't give the same key
+	my $candidate = join("\0", $prefix, defined($suffixes) ? $suffixes : '', @dirs);
 	our $savedpaths;
 
 	$mode ||= '+<';	# defaults to opening RW
@@ -61,7 +76,7 @@ sub pfopen
 		delete $savedpaths->{$candidate};	# Failed to open cached file
 	}
 
-	foreach my $dir (split /:/, $path) {
+	foreach my $dir (@dirs) {
 		next unless -d $dir;
 
 		foreach my $suffix (defined($suffixes) ? split(/:/, $suffixes) : undef) {
@@ -89,8 +104,6 @@ Nigel Horne, C<< <njh at nigelhorne.com> >>
 =head1 BUGS
 
 Doesn't play well in taint mode.
-
-Using the colon separator can cause confusion on Windows.
 
 Would be better if the mode and suffixes options were the other way around, but it's too late to change that now.
 
@@ -134,7 +147,7 @@ L<http://deps.cpantesters.org/?module=File::pfopen>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2017-2024 Nigel Horne.
+Copyright 2017-2026 Nigel Horne.
 
 Usage is subject to licence terms.
 

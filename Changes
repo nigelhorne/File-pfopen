@@ -1,5 +1,12 @@
 Revision history for File-pfopen
 
+0.04
+	Separate directories with the platform's path separator
+		($Config{path_sep}), so ';' on Windows, allowing drive letters
+	The directory list can now also be an array reference
+	Fixed cache key collisions between different arguments
+	Fixed the mode example in the documentation
+
 0.03	Wed Nov  6 08:17:35 EST 2024
 	Refactor
 	Use Test::DescribeMe to simplify tests
