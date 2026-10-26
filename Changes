@@ -11,7 +11,10 @@ Revision history for File-pfopen
 	Never return a directory, either from a search or from the cache
 	Ignore undefined and empty directories, and names containing NUL,
 		instead of giving warnings
-	Added t/function.t
+	Doesn't change $!
+	Rewrote the documentation: more examples, common pitfalls, encoding,
+		API and formal specifications, and a state diagram
+	Added t/function.t and t/unit.t
 
 0.03	Wed Nov  6 08:17:35 EST 2024
 	Refactor
